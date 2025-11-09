@@ -63,7 +63,6 @@ class AgentFactory:
             tools=spec.tools,
             instructions=spec.instructions,
             markdown=True,
-            show_tool_calls=True,
         )
 
         return agent

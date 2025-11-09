@@ -69,7 +69,6 @@ class ManagerAgent:
                 "Always explain your reasoning to the user.",
             ],
             markdown=True,
-            show_tool_calls=True,
         )
 
         return agent

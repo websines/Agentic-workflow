@@ -30,7 +30,6 @@ def create_basic_agent():
             "If you're unsure, admit it honestly.",
         ],
         markdown=True,
-        show_tool_calls=True,
     )
 
     return agent

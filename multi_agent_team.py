@@ -91,7 +91,6 @@ def create_agent_team():
             "Synthesize the team's outputs into a coherent response.",
         ],
         markdown=True,
-        show_tool_calls=True,
     )
 
     return team_leader

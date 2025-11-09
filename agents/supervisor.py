@@ -6,7 +6,7 @@ Manages specialized agents, orchestrates workflows, and drives evolution
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools import tool
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 import json
 from datetime import datetime
 
@@ -109,7 +109,6 @@ class SupervisorAgent:
                 "Be efficient, strategic, and evolutionary.",
             ],
             markdown=True,
-            show_tool_calls=True,
         )
 
         return agent
@@ -321,7 +320,7 @@ class SupervisorAgent:
         {{
             "keep": ["agent1", "agent2"],
             "modify": [
-                {{"agent": "agent3", "reason": "...", "suggestion": "..."}
+                {{"agent": "agent3", "reason": "...", "suggestion": "..."}}
             ],
             "kill": [
                 {{"agent": "agent4", "reason": "..."}}

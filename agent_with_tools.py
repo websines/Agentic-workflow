@@ -104,7 +104,6 @@ def create_tool_agent():
             "Always explain what you're doing when using a tool.",
         ],
         markdown=True,
-        show_tool_calls=True,
     )
 
     return agent

@@ -1,0 +1,15 @@
+{
+  "run_id": "e06c1c93-8392-407f-a3ea-b38fe6e70e20",
+  "timestamp": "2025-11-09T16:43:05.844657",
+  "workflow_type": "content_creation",
+  "user_input": "Create a brief outline for a blog post about multi-agent AI systems and how they work together",
+  "parent_run_id": null,
+  "status": "failed",
+  "result": null,
+  "error": "upstream connect error or disconnect/reset before headers. reset reason: remote connection failure, transport failure reason: TLS_error:|268435581:SSL routines:OPENSSL_internal:CERTIFICATE_VERIFY_FAILED:TLS_error_end",
+  "steps": [
+    {
+      "step_id": "604bf6f7-b4fa-4172-aa5a-cef6201f6ea8",
+      "run_id": "e06c1c93-8392-407f-a3ea-b38fe6e70e20",
+      "agent_name": "Manager",
+      "action_type": 
