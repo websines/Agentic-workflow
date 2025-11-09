@@ -16,6 +16,7 @@ from storage import WorkflowStorage
 from models import Run, Workflow, RunStatus
 from agents.manager import ManagerAgent
 from agents.supervisor import SupervisorAgent
+from rl_training_system import RLTrainingSystem
 
 
 class WorkflowEngine:
@@ -33,6 +34,9 @@ class WorkflowEngine:
         # Initialize core agents
         self.manager = ManagerAgent(self.storage)
         self.supervisor = SupervisorAgent(self.storage)
+
+        # Initialize RL training system
+        self.rl_system = RLTrainingSystem(self.storage)
 
         # Register default worker agents
         self._register_default_workers()
@@ -147,15 +151,23 @@ class WorkflowEngine:
             workflow = self._get_or_create_workflow(workflow_type)
             progress.update(task2, description="[green]✓ Workflow loaded")
 
-            # Phase 3: Supervisor executes workflow
-            task3 = progress.add_task("[cyan]Supervisor orchestrating team...", total=None)
-            run = self.supervisor.execute_workflow(run, workflow)
-            progress.update(task3, description="[green]✓ Workflow execution complete")
+            # Phase 3: Check if we need new agents for this task
+            task3 = progress.add_task("[cyan]Checking for needed agents...", total=None)
+            new_agent = self.supervisor.auto_create_agent(user_input)
+            if new_agent:
+                progress.update(task3, description=f"[green]✓ Created {new_agent}")
+            else:
+                progress.update(task3, description="[green]✓ All required agents available")
 
-            # Phase 4: Manager presents result
-            task4 = progress.add_task("[cyan]Manager preparing result...", total=None)
+            # Phase 4: Supervisor executes workflow
+            task4 = progress.add_task("[cyan]Supervisor orchestrating team...", total=None)
+            run = self.supervisor.execute_workflow(run, workflow)
+            progress.update(task4, description="[green]✓ Workflow execution complete")
+
+            # Phase 5: Manager presents result
+            task5 = progress.add_task("[cyan]Manager preparing result...", total=None)
             presentation = self.manager.present_result(run)
-            progress.update(task4, description="[green]✓ Result ready")
+            progress.update(task5, description="[green]✓ Result ready")
 
         # Print result
         self.console.print(Panel(
@@ -244,40 +256,87 @@ class WorkflowEngine:
 
         self.console.print("\n", table)
 
-    def evolve_system(self):
+    def evolve_system(self, run_rl_training: bool = True):
         """
-        Trigger system evolution
+        Trigger system evolution with RL training
         Evaluate agents and apply evolutionary pressure
-        """
-        self.console.print("\n[bold yellow]🧬 Starting System Evolution[/bold yellow]\n")
 
-        # Get recommendations from Supervisor
+        Args:
+            run_rl_training: Whether to run RL training before evolution
+        """
+        self.console.print("\n[bold yellow]🧬 Starting System Evolution with RL Training[/bold yellow]\n")
+
+        # 1. Run RL training to learn from recent experiences
+        if run_rl_training:
+            self.console.print("[cyan]Step 1: Running RL Training...[/cyan]")
+            self.rl_system.run_full_training_cycle(collect_limit=100)
+
+        # 2. Get evolved prompts from RL system
+        self.console.print("\n[cyan]Step 2: Evolving Agent Prompts...[/cyan]")
+        evolved_prompts = self.rl_system.evolve_agent_prompts(self.supervisor.agent_metrics)
+
+        # Apply evolved prompts
+        for agent_name, new_instructions in evolved_prompts.items():
+            if agent_name in self.supervisor.worker_agents:
+                self.supervisor.evolve_agent(
+                    agent_name,
+                    "RL-optimized instructions",
+                    improvements=new_instructions
+                )
+
+        # 3. Get recommendations from Supervisor
+        self.console.print("\n[cyan]Step 3: Evaluating Agents...[/cyan]")
         recommendations = self.supervisor.evaluate_agents()
 
-        self.console.print("[cyan]Evolution Recommendations:[/cyan]")
+        self.console.print("\n[cyan]Evolution Recommendations:[/cyan]")
         self.console.print(recommendations)
 
-        # Apply evolution
+        # 4. Apply evolutionary selection
+        self.console.print("\n[cyan]Step 4: Applying Evolution...[/cyan]")
+
+        # Kill underperformers
         for agent_info in recommendations.get("kill", []):
             agent_name = agent_info.get("agent")
             reason = agent_info.get("reason")
             self.console.print(f"\n[red]🪦 Terminating {agent_name}:[/red] {reason}")
             self.supervisor.kill_agent(agent_name)
 
+        # Evolve existing agents
         for agent_info in recommendations.get("modify", []):
             agent_name = agent_info.get("agent")
             suggestion = agent_info.get("suggestion")
-            self.console.print(f"\n[yellow]🧬 Evolving {agent_name}:[/yellow] {suggestion}")
-            self.supervisor.evolve_agent(agent_name, suggestion)
 
+            # Get RL recommendations for improvements
+            improvements = []
+            if agent_name in evolved_prompts:
+                improvements = evolved_prompts[agent_name]
+
+            self.console.print(f"\n[yellow]🧬 Evolving {agent_name}:[/yellow] {suggestion}")
+            self.supervisor.evolve_agent(agent_name, suggestion, improvements)
+
+        # Create new agents
         for new_agent_info in recommendations.get("create", []):
             name = new_agent_info.get("name")
             role = new_agent_info.get("role")
+            capabilities = [role]  # Basic capabilities from role
+
             self.console.print(f"\n[green]✨ Creating new agent {name}:[/green] {role}")
-            # Placeholder - would need actual agent creation logic
+
+            # Use agent factory to create specialized agent
+            new_agent = self.supervisor.agent_factory.create_custom_agent(
+                name=name,
+                role=role,
+                capabilities=capabilities
+            )
+
+            self.supervisor.register_worker(name, new_agent)
 
         self.console.print("\n[green]✓ Evolution complete[/green]")
         self._print_system_status()
+
+        # 5. Show performance trends
+        self.console.print("\n[cyan]Performance Trends:[/cyan]")
+        self.rl_system.print_performance_trends()
 
     def get_statistics(self) -> Dict[str, Any]:
         """Get system-wide statistics"""

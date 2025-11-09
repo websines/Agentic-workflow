@@ -13,6 +13,10 @@ from datetime import datetime
 from config import Config
 from storage import WorkflowStorage
 from models import Run, RunStatus, Step, ActionType, Workflow
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from agent_factory import AgentFactory, AgentSpecification
 
 
 class SupervisorAgent:
@@ -35,6 +39,7 @@ class SupervisorAgent:
         self.agent = self._create_agent()
         self.worker_agents: Dict[str, Agent] = {}
         self.agent_metrics: Dict[str, Dict[str, Any]] = {}
+        self.agent_factory = AgentFactory()  # For auto-creating agents
 
     def _create_agent(self) -> Agent:
         """Create the Supervisor agent"""
@@ -351,7 +356,7 @@ class SupervisorAgent:
             del self.worker_agents[agent_name]
             print(f"🪦 Agent '{agent_name}' has been terminated (poor performance)")
 
-    def evolve_agent(self, agent_name: str, modification: str) -> None:
+    def evolve_agent(self, agent_name: str, modification: str, improvements: Optional[List[str]] = None) -> None:
         """Evolve an agent based on feedback"""
         if agent_name in self.worker_agents:
             metrics = self.agent_metrics.get(agent_name, {})
@@ -360,7 +365,40 @@ class SupervisorAgent:
             old_version = metrics.get("version", 1)
             self.storage.save_agent_version(agent_name, old_version, {}, metrics)
 
-            # Create new version (placeholder - would need actual modification logic)
+            # Create evolved version using factory
+            current_agent = self.worker_agents[agent_name]
+
+            if improvements:
+                evolved_agent = self.agent_factory.evolve_agent(current_agent, improvements)
+                self.worker_agents[agent_name] = evolved_agent
+
+            # Update version
             metrics["version"] = old_version + 1
 
             print(f"🧬 Agent '{agent_name}' evolved to v{metrics['version']}: {modification}")
+
+    def auto_create_agent(self, task_description: str) -> Optional[str]:
+        """
+        Automatically create a new agent if needed for a task
+
+        Returns:
+            Name of created agent, or None if no agent was created
+        """
+        # Check if we need a new agent
+        existing_agents = list(self.worker_agents.keys())
+
+        spec = self.agent_factory.suggest_agent_for_task(task_description, existing_agents)
+
+        if spec:
+            # Create the agent
+            new_agent = self.agent_factory.create_agent(spec)
+
+            # Register it
+            self.register_worker(spec.name, new_agent)
+
+            print(f"✨ Auto-created new agent: {spec.name}")
+            print(f"   Role: {spec.role}")
+
+            return spec.name
+
+        return None
