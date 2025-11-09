@@ -88,6 +88,11 @@ class Run:
         """Convert to dictionary"""
         data = asdict(self)
         data['status'] = self.status.value
+        # Convert action_type enums in nested steps
+        if 'steps' in data and data['steps']:
+            for step in data['steps']:
+                if 'action_type' in step and isinstance(step['action_type'], ActionType):
+                    step['action_type'] = step['action_type'].value
         return data
 
     def add_step(self, step: Step):

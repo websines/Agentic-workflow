@@ -1,0 +1,27 @@
+{
+  "workflow_id": "072d3fb7-1a98-483c-ae8f-49f8a05b8dea",
+  "name": "content_creation",
+  "description": "Create high-quality content",
+  "steps_template": [
+    {
+      "agent": "Research Agent",
+      "task": "Research the topic thoroughly"
+    },
+    {
+      "agent": "Writer Agent",
+      "task": "Write engaging content based on research"
+    },
+    {
+      "agent": "Analyst Agent",
+      "task": "Review and suggest improvements"
+    }
+  ],
+  "required_agents": [
+    "Research Agent",
+    "Writer Agent",
+    "Analyst Agent"
+  ],
+  "metadata": {},
+  "created_at": "2025-11-09T17:10:55.446412",
+  "updated_at": "2025-11-09T17:10:55.446427"
+}

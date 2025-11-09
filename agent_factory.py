@@ -58,7 +58,8 @@ class AgentFactory:
             model=OpenAIChat(
                 id=self.lm_config["model"],
                 api_key=self.lm_config["api_key"],
-                base_url=self.lm_config["base_url"]
+                base_url=self.lm_config["base_url"],
+                http_client=Config.get_http_client()
             ),
             tools=spec.tools,
             instructions=spec.instructions,

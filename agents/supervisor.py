@@ -72,7 +72,8 @@ class SupervisorAgent:
             model=OpenAIChat(
                 id=lm_config["model"],
                 api_key=lm_config["api_key"],
-                base_url=lm_config["base_url"]
+                base_url=lm_config["base_url"],
+                http_client=Config.get_http_client()
             ),
             tools=[get_agent_performance, list_active_agents, get_workflow_template],
             instructions=[

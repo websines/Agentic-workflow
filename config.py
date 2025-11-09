@@ -5,6 +5,7 @@ Handles LMStudio endpoint configuration
 
 import os
 from dotenv import load_dotenv
+import httpx
 
 # Load environment variables
 load_dotenv()
@@ -28,6 +29,11 @@ class Config:
             "api_key": cls.LMSTUDIO_API_KEY,
             "model": cls.LMSTUDIO_MODEL
         }
+
+    @classmethod
+    def get_http_client(cls):
+        """Returns httpx client with SSL verification disabled for self-signed certs"""
+        return httpx.Client(verify=False)
 
     @classmethod
     def validate(cls):

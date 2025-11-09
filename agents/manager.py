@@ -52,7 +52,8 @@ class ManagerAgent:
             model=OpenAIChat(
                 id=lm_config["model"],
                 api_key=lm_config["api_key"],
-                base_url=lm_config["base_url"]
+                base_url=lm_config["base_url"],
+                http_client=Config.get_http_client()
             ),
             tools=[list_available_workflows, get_workflow_stats],
             instructions=[
