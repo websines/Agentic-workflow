@@ -1,0 +1,19 @@
+{
+  "doc_id": "2229d07fcae0d0bf",
+  "title": "Remote Work Policy",
+  "content": "\n        Employees may work remotely with manager approval.\n\n        Special provisions:\n        - Sick child care: Work from home without PTO for up to 5 days/year\n        - Equipment: Company provides laptop and monitor\n        - Hours: Maintain 9 AM - 5 PM availability\n        - Performance: Same standards as office work\n        ",
+  "doc_type": "policy",
+  "domain": "hr",
+  "tags": [
+    "policy",
+    "official",
+    "hr"
+  ],
+  "created_by": "HR Manager",
+  "created_at": "2025-11-09T16:56:52.143065",
+  "updated_at": "2025-11-09T16:56:52.143066",
+  "version": 1,
+  "metadata": {
+    "requires_acknowledgment": true
+  }
+}

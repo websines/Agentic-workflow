@@ -1,0 +1,55 @@
+{
+  "2229d07fcae0d0bf": {
+    "doc_id": "2229d07fcae0d0bf",
+    "title": "Remote Work Policy",
+    "content": "\n        Employees may work remotely with manager approval.\n\n        Special provisions:\n        - Sick child care: Work from home without PTO for up to 5 days/year\n        - Equipment: Company provides laptop and monitor\n        - Hours: Maintain 9 AM - 5 PM availability\n        - Performance: Same standards as office work\n        ",
+    "doc_type": "policy",
+    "domain": "hr",
+    "tags": [
+      "policy",
+      "official",
+      "hr"
+    ],
+    "created_by": "HR Manager",
+    "created_at": "2025-11-09T16:56:52.143065",
+    "updated_at": "2025-11-09T16:56:52.143066",
+    "version": 1,
+    "metadata": {
+      "requires_acknowledgment": true
+    }
+  },
+  "b35af5259f328b64": {
+    "doc_id": "b35af5259f328b64",
+    "title": "Return & Refund Policy",
+    "content": "# Return & Refund Policy\n\n**Q1: Return window?**\n\nA: 30 days for full refund\n\n**Q2: Return shipping?**\n\nA: Free prepaid label provided\n\n**Q3: Damaged items?**\n\nA: Accepted anytime, priority processing\n\n**Q4: Exchanges?**\n\nA: Processed immediately without waiting\n\n",
+    "doc_type": "faq",
+    "domain": "customer_support",
+    "tags": [
+      "faq",
+      "questions",
+      "customer_support"
+    ],
+    "created_by": "Support Manager",
+    "created_at": "2025-11-09T16:56:52.144315",
+    "updated_at": "2025-11-09T16:56:52.144316",
+    "version": 1,
+    "metadata": {}
+  },
+  "66110ae603f70db3": {
+    "doc_id": "66110ae603f70db3",
+    "title": "Pricing Guidelines",
+    "content": "# Pricing Guidelines\n\n1. Base price: $100/unit\n2. Volume discount: 100-499 units = 10% off\n3. Volume discount: 500+ units = 15% off\n4. New customer discount: Additional 5% off first order\n5. Requires approval: Discounts above 20% total\n",
+    "doc_type": "process",
+    "domain": "sales",
+    "tags": [
+      "process",
+      "procedure",
+      "sales"
+    ],
+    "created_by": "Sales VP",
+    "created_at": "2025-11-09T16:56:52.145441",
+    "updated_at": "2025-11-09T16:56:52.145442",
+    "version": 1,
+    "metadata": {}
+  }
+}
